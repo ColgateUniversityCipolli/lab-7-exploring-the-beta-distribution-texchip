@@ -4,6 +4,7 @@
 ################################################################
 
 library(patchwork)
+library(tidyverse)
 
 beta.stats <- function(alpha, beta){
   
@@ -115,7 +116,7 @@ hist.plots <- function(alpha, beta){
     geom_hline(yintercept = 0)+
     ggtitle(paste0("Beta(", alpha, ", ", beta, ")"))
 
-  summary <- beta.df %>%
+  summary <- beta.df |>
     summarize(
       mean = mean(beta.sample),
       variance = var(beta.sample),
@@ -137,3 +138,74 @@ print(full.hist)
 ################################################################
 
 library(cumstats)
+
+calc.summary <- function(alpha, beta){
+
+beta.sample <- bsample(alpha,beta)
+beta.df <- data.frame(x = beta.sample)
+
+csum <- beta.df |>
+  mutate(
+    index = row_number(),
+    cmean = cummean(x),
+    cvariance = cumvar(x),
+    cskewness = cumskew(x),
+    ckurtosis = cumkurt(beta.sample))
+
+return(csum)
+
+}
+
+csummary <- calc.summary(2,5)
+
+sp1 <- ggplot(csummary, aes(x = index, y = cmean)) +
+    geom_line(color = "blue") +
+    geom_hline(yintercept = beta.stats(2,5)$mean, color="red", linetype="dashed") +
+    theme_bw() +
+    xlab("Sample Size") +
+    ylab("Cumulative Mean")
+  
+sp2 <- ggplot(csummary, aes(x=index, y=cvariance)) +
+    geom_line(color = "blue") +
+    geom_hline(yintercept = beta.stats(2,5)$variance, color="red", linetype="dashed") +
+    theme_bw() +
+    xlab("Sample Size") +
+    ylab("Cumulative Variance")
+  
+sp3 <- ggplot(csummary, aes(x = index, y = cskewness)) +
+    geom_line(color = "blue") +
+    geom_hline(yintercept = beta.stats(2,5)$skewness, color = "red", linetype="dashed") +
+    theme_bw() +
+    xlab("Sample Size") +
+    ggtitle("Cumulative Skewness")
+  
+sp4 <- ggplot(csummary, aes(x = index, y = ckurtosis)) +
+    geom_line(color = "blue") +
+    geom_hline(yintercept = beta.stats(2,5)$excess.kurtosis+3, color = "red", linetype = "dashed") +
+    theme_bw() +
+    xlab("Sample Size") +
+    ggtitle("Cumulative Kurtosis")
+
+# I don't think I did this correctly.
+#for(i in 2:50){
+#  set.seed(7272+i)
+#  bstats <- calc.summary(2,5)
+#  sp1 <- sp1 + 
+#    geom_hline(yintercept = bstats$cmean, color=i, linetype="dashed")
+#  sp2 <- sp2 + 
+#    geom_hline(yintercept = bstats$cvariance, color=i, linetype="dashed")
+#  sp3 <- sp3 + 
+#    geom_hline(yintercept = bstats$cskewness, color=i, linetype="dashed")
+#  sp4 <- sp4 + 
+#    geom_hline(yintercept = bstats$ckurtosis, color=i, linetype="dashed")
+#}
+
+sumplots <- list(sp1, sp2, sp3, sp4)
+full.plot <- wrap_plots(sumplots, ncol = 2)
+print(full.plot) 
+
+################################################################
+##### Task Five ################################################
+################################################################
+
+# I ran out of time, I apologize. I've gotten pretty behind and I'll try to catch up over break.
