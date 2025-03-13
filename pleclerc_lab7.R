@@ -209,3 +209,87 @@ print(full.plot)
 ################################################################
 
 # I ran out of time, I apologize. I've gotten pretty behind and I'll try to catch up over break.
+
+
+
+
+
+
+################################################################
+##### Task Six #################################################
+################################################################
+
+death.rates <- read_csv("worldbank.csv")
+head(death.rates)
+
+death.rates <- death.rates |>
+  mutate(across(-c(1:4), ~./1000))
+head(death.rates)
+
+################################################################
+##### Task Seven ###############################################
+################################################################
+
+library(nleqslv)
+
+MOM.exp <- function(data, par){
+  alpha <- par[1]
+  beta <- par[2]
+  
+  m1 <- mean(data, na.rm=T)
+  EX1 <- alpha/(alpha+beta)
+  
+  m2 <- mean(data^2, na.rm=T)
+  EX2 <- (alpha+1)*alpha/((alpha+beta+1)*(alpha+beta))
+  return(c(EX1-m1, EX2-m2))
+}
+
+moms <- nleqslv(x = c(1,1),
+        fn = MOM.exp,
+        data=death.rates$`2022`)
+(alpha.hat.mom <- moms$x[1])
+(beta.hat.mom <- moms$x[2])
+
+s = seq(0,0.025,length.out=1000)
+mom.dist <- tibble(x=s) |>
+  mutate(pdf = dbeta(x=s,alpha.hat.mom,beta.hat.mom))
+
+llbeta <- function(data, par, neg=F){
+  alpha <- par[1]
+  beta <- par[2]
+  loglik <- sum(dbeta(x=data, alpha, beta, log=T), na.rm=T)
+  return(ifelse(neg, -loglik, loglik))
+}
+
+mles <- optim(par = c(1,1), 
+      fn = llbeta,
+      data=death.rates$`2022`,
+      neg=T)
+(alpha.hat.mle <- mles$par[1])
+(beta.hat.mle <- mles$par[2])
+
+mle.dist <- tibble(x=s) |>
+  mutate(pdf = dbeta(x=s,alpha.hat.mle,beta.hat.mle))
+
+ggplot() +
+  geom_histogram(data=death.rates,
+                 aes(x=`2022`,
+                     y=after_stat(density)),
+                 breaks=seq(0,0.024,0.002)) +
+  geom_hline(yintercept=0) +
+  theme_bw() +
+  xlab("Death Rates") +
+  ylab("Density") +
+  geom_line(data = mom.dist, aes(x=x,y=pdf), color="red",size=1) +
+  geom_line(data = mle.dist, aes(x=x,y=pdf), color="blue",size=1)
+
+################################################################
+##### Task Eight ###############################################
+################################################################
+
+
+
+
+
+
+
