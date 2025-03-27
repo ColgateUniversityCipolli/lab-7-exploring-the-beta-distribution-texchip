@@ -27,7 +27,7 @@ beta.plots <- function(alpha, beta){
     theme_bw()+  
     xlab("x")+   
     ylab("Density")+  
-    ggtitle(paste0("Beta(", alpha, ", ", beta, ")"))
+    ggtitle(paste0("Beta(", alpha, ", ", beta, ") Distribution"))
 
   return(cplot)
 }
@@ -44,7 +44,7 @@ for(i in 1:length(alpha)){
 }
 #view(beta.table)
 full.plot <- wrap_plots(plots, ncol = 2)  
-ggsave("task1.png", width = 10, height = 8)
+ggsave("task1.png", width = 5, height = 4)
 print(full.plot)
 
 
@@ -93,9 +93,9 @@ sample.size <- 500
 library(e1071)
 
 bsample <- function(alpha, beta){
-  beta.sample <- rbeta(n = sample.size,  # sample size
-                       shape1 = alpha,   # alpha parameter
-                       shape2 = beta)    # beta parameter
+  beta.sample <- rbeta(n = sample.size, 
+                       shape1 = alpha, 
+                       shape2 = beta)  
   return(beta.sample)
 }
 
@@ -112,7 +112,7 @@ hist.plots <- function(alpha, beta){
     xlab("x") +
     ylab("Density") +
     geom_hline(yintercept = 0)+
-    ggtitle(paste0("Beta(", alpha, ", ", beta, ")"))
+    ggtitle(paste0("Histogram: Beta(", alpha, ", ", beta, ")"))
 
   summary <- beta.df |>
     summarize(
@@ -129,7 +129,7 @@ for(i in 1:length(alpha)){
   histograms[[i]] <- hist.plots(alpha[i], beta[i]) + xlim(0,1) + ylim(0,3)
 }
 full.hist <- wrap_plots(histograms, ncol = 2)
-ggsave("task3.png", width = 10, height = 8)
+ggsave("task3.png", width = 5, height = 4)
 print(full.hist)
 
 ################################################################
@@ -159,30 +159,38 @@ csummary <- calc.summary(2,5)
 
 sp1 <- ggplot(csummary, aes(x = index, y = cmean)) +
     geom_line(color = "blue") +
-    geom_hline(yintercept = beta.stats(2,5)$mean, color="red", linetype="dashed") +
+    geom_hline(yintercept = beta.stats(2,5)$mean, 
+               color="red", linetype="dashed") +
     theme_bw() +
     xlab("Sample Size") +
-    ylab("Cumulative Mean")
+    ylab("Cumulative Mean") +
+    ggtitle("Cumulative Mean")
   
 sp2 <- ggplot(csummary, aes(x=index, y=cvariance)) +
     geom_line(color = "blue") +
-    geom_hline(yintercept = beta.stats(2,5)$variance, color="red", linetype="dashed") +
+    geom_hline(yintercept = beta.stats(2,5)$variance, 
+               color="red", linetype="dashed") +
     theme_bw() +
     xlab("Sample Size") +
-    ylab("Cumulative Variance")
+    ylab("Cumulative Variance") +
+    ggtitle("Cumulative Variance")
   
 sp3 <- ggplot(csummary, aes(x = index, y = cskewness)) +
     geom_line(color = "blue") +
-    geom_hline(yintercept = beta.stats(2,5)$skewness, color = "red", linetype="dashed") +
+    geom_hline(yintercept = beta.stats(2,5)$skewness, 
+               color = "red", linetype="dashed") +
     theme_bw() +
     xlab("Sample Size") +
+    ylab("Cumulative Skewness") +
     ggtitle("Cumulative Skewness")
   
 sp4 <- ggplot(csummary, aes(x = index, y = ckurtosis)) +
     geom_line(color = "blue") +
-    geom_hline(yintercept = beta.stats(2,5)$excess.kurtosis+3, color = "red", linetype = "dashed") +
+    geom_hline(yintercept = beta.stats(2,5)$excess.kurtosis+3, 
+               color = "red", linetype = "dashed") +
     theme_bw() +
     xlab("Sample Size") +
+    ylab("Cumulative Kurtosis") +
     ggtitle("Cumulative Kurtosis")
 
 for(i in 2:50){
@@ -200,7 +208,7 @@ for(i in 2:50){
 
 sumplots <- list(sp1, sp2, sp3, sp4)
 full.plot <- wrap_plots(sumplots, ncol = 2)
-ggsave("task4.png", width = 10, height = 8)
+ggsave("task4.png", width = 5, height = 4)
 print(full.plot) 
 
 ################################################################
@@ -229,28 +237,44 @@ for(i in 1:1000){
 }
 
 p1 <- ggplot(stats, aes(x = mean)) +
-  geom_histogram(aes(y = after_stat(density)), bins = 30, fill = "blue", alpha = 0.5) +
-  geom_density(color = "black") + ggtitle("Sampling Distribution of Mean") +
-  geom_hline(yintercept = 0)
+  geom_histogram(aes(y = after_stat(density)), bins = 30, 
+                 fill = "blue", alpha = 0.5) +
+  geom_density(color = "black") + ggtitle("Histogram of Mean") +
+  geom_hline(yintercept = 0) +
+  theme_bw() +
+  xlab("Mean") +
+  ylab("Density")
 
 p2 <- ggplot(stats, aes(x = variance)) +
-  geom_histogram(aes(y = after_stat(density)), bins = 30, fill = "blue", alpha = 0.5) +
-  geom_density(color = "black") + ggtitle("Sampling Distribution of Variance") +
-  geom_hline(yintercept = 0)
+  geom_histogram(aes(y = after_stat(density)), bins = 30, 
+                 fill = "blue", alpha = 0.5) +
+  geom_density(color = "black") + ggtitle("Histogram of Variance") +
+  geom_hline(yintercept = 0) +
+  theme_bw() +
+  xlab("Variance") +
+  ylab("Density")
 
 p3 <- ggplot(stats, aes(x = skewness)) +
-  geom_histogram(aes(y = after_stat(density)), bins = 30, fill = "blue", alpha = 0.5) +
-  geom_density(color = "black") + ggtitle("Sampling Distribution of Skewness") +
-  geom_hline(yintercept = 0)
+  geom_histogram(aes(y = after_stat(density)), bins = 30, 
+                 fill = "blue", alpha = 0.5) +
+  geom_density(color = "black") + ggtitle("Histogram of Skewness") +
+  geom_hline(yintercept = 0) +
+  theme_bw() +
+  xlab("Skewness") +
+  ylab("Density")
 
 p4 <- ggplot(stats, aes(x = kurtosis)) +
-  geom_histogram(aes(y = after_stat(density)), bins = 30, fill = "blue", alpha = 0.5) +
-  geom_density(color = "black") + ggtitle("Sampling Distribution of Kurtosis") +
-  geom_hline(yintercept = 0)
+  geom_histogram(aes(y = after_stat(density)), bins = 30, 
+                 fill = "blue", alpha = 0.5) +
+  geom_density(color = "black") + ggtitle("Histogram of Kurtosis") +
+  geom_hline(yintercept = 0) +
+  theme_bw() +
+  xlab("Kurtosis") +
+  ylab("Density")
 
 library(patchwork)
 (p1 | p2) / (p3 | p4)
-ggsave("task5.png", width = 10, height = 8)
+ggsave("task5.png", width = 5, height = 4)
 
 ################################################################
 ##### Task Six #################################################
@@ -318,9 +342,11 @@ ggplot() +
   theme_bw() +
   xlab("Death Rates") +
   ylab("Density") +
-  geom_line(data = mom.dist, aes(x=x,y=pdf), color="red",size=1) +
-  geom_line(data = mle.dist, aes(x=x,y=pdf), color="blue",size=1)
-ggsave("task7.png", width = 10, height = 8)
+  geom_line(data = mom.dist, aes(x=x,y=pdf), 
+            color="red", size=1) +
+  geom_line(data = mle.dist, aes(x=x,y=pdf), 
+            color="blue", size=1)
+ggsave("task7.png", width = 5, height = 4)
 
 ################################################################
 ##### Task Eight ###############################################
@@ -354,24 +380,36 @@ for(i in 1:1000){
 
 p1 <- ggplot(mom.est, aes(x = alpha)) +
   geom_density(fill = "blue", alpha = 0.5) + 
-  ggtitle("MOM Alpha Density") +
+  ggtitle("MOM Density (Alpha)") +
+  theme_bw() +
+  xlab("Alpha") +
+  ylab("Density") +
   geom_hline(yintercept = 0)
 p2 <- ggplot(mom.est, aes(x = beta)) +
   geom_density(fill = "blue", alpha = 0.5) + 
-  ggtitle("MOM Beta Density") +
+  ggtitle("MOM Density (Beta)") +
+  theme_bw() +
+  xlab("Beta") +
+  ylab("Density") +
   geom_hline(yintercept = 0)
 p3 <- ggplot(mle.est, aes(x = alpha)) +
   geom_density(fill = "red", alpha = 0.5) + 
-  ggtitle("MLE Alpha Density") +
+  ggtitle("MLE Density (Alpha)") +
+  theme_bw() +
+  xlab("Alpha") +
+  ylab("Density") +
   geom_hline(yintercept = 0)
 p4 <- ggplot(mle.est, aes(x = beta)) +
   geom_density(fill = "red", alpha = 0.5) + 
-  ggtitle("MLE Beta Density") +
+  ggtitle("MLE Density (Beta)") +
+  theme_bw() +
+  xlab("Beta") +
+  ylab("Density") +
   geom_hline(yintercept = 0)
 
 library(patchwork)
 (p1 | p2) / (p3 | p4)
-ggsave("task8.png", width = 10, height = 8)
+ggsave("task8.png", width = 5, height = 4)
 
 metrics <- function(estimate, value) {
   bias <- mean(estimate) - value
@@ -403,4 +441,5 @@ metrics.est <- tibble(
           mom_metrics_beta$MSE, 
           mle_metrics_beta$MSE))
 
-print(metrics.est)
+library(xtable)
+print(xtable(metrics.est), type="latex")
