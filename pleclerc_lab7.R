@@ -185,7 +185,6 @@ sp4 <- ggplot(csummary, aes(x = index, y = ckurtosis)) +
     xlab("Sample Size") +
     ggtitle("Cumulative Kurtosis")
 
-# I don't think I did this correctly.
 for(i in 2:50){
   set.seed(7272+i)
   bstats <- calc.summary(2,5)
