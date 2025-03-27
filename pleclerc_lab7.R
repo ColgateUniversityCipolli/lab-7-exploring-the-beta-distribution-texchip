@@ -208,9 +208,45 @@ print(full.plot)
 ##### Task Five ################################################
 ################################################################
 
-# I ran out of time, I apologize. I've gotten pretty behind and I'll try to catch up over break.
+library(e1071)
+alpha <- 2
+beta <- 5
+n <- 500
+stats <- tibble(mean = numeric(), variance = numeric(),
+                skewness = numeric(), kurtosis = numeric())
 
+for(i in 1:1000){
+  set.seed(7272+i)
+  sample <- rbeta(n, alpha, beta)
+  mean.val <- mean(sample)
+  var.val <- var(sample)
+  skew.val <- skewness(sample)
+  kurt.val <- kurtosis(sample)-3
+  
+  stats <- bind_rows(stats, tibble(mean = mean.val, 
+                                   variance = var.val, 
+                                   skewness = skew.val, 
+                                   kurtosis = kurt.val))
+}
 
+p1 <- ggplot(stats, aes(x = mean)) +
+  geom_histogram(aes(y = after_stat(density)), bins = 30, fill = "blue", alpha = 0.5) +
+  geom_density(color = "black") + ggtitle("Sampling Distribution of Mean")
+
+p2 <- ggplot(stats, aes(x = variance)) +
+  geom_histogram(aes(y = after_stat(density)), bins = 30, fill = "blue", alpha = 0.5) +
+  geom_density(color = "black") + ggtitle("Sampling Distribution of Variance")
+
+p3 <- ggplot(stats, aes(x = skewness)) +
+  geom_histogram(aes(y = after_stat(density)), bins = 30, fill = "blue", alpha = 0.5) +
+  geom_density(color = "black") + ggtitle("Sampling Distribution of Skewness")
+
+p4 <- ggplot(stats, aes(x = kurtosis)) +
+  geom_histogram(aes(y = after_stat(density)), bins = 30, fill = "blue", alpha = 0.5) +
+  geom_density(color = "black") + ggtitle("Sampling Distribution of Kurtosis")
+
+library(patchwork)
+(p1 | p2) / (p3 | p4)
 
 
 
@@ -287,9 +323,57 @@ ggplot() +
 ##### Task Eight ###############################################
 ################################################################
 
+alpha <- 8
+beta <- 950
+n <- 266
+mom.est <- tibble(alpha = numeric(), beta = numeric())
+mle.est <- tibble(alpha = numeric(), beta = numeric())
 
+for(i in 1:1000){
+  set.seed(7272+i)
+  sample <- rbeta(n, alpha, beta)
+  
+  moms <- nleqslv(x = c(1,1),
+                  fn = MOM.exp,
+                  data=sample)
+  mom.est <- bind_rows(mom.est, tibble(alpha = moms$x[1], beta = moms$x[2]))
+  
+  mles <- optim(par = c(1,1), 
+                fn = llbeta,
+                data=sample,
+                neg=T)
+  mle.est <- bind_rows(mle.est, tibble(alpha = mles$par[1], beta = mles$par[2]))
+}
 
+p1 <- ggplot(mom.est, aes(x = alpha)) +
+  geom_density(fill = "blue", alpha = 0.5) + ggtitle("MOM Alpha Density")
+p2 <- ggplot(mom.est, aes(x = beta)) +
+  geom_density(fill = "blue", alpha = 0.5) + ggtitle("MOM Beta Density")
+p3 <- ggplot(mle.est, aes(x = alpha)) +
+  geom_density(fill = "red", alpha = 0.5) + ggtitle("MLE Alpha Density")
+p4 <- ggplot(mle.est, aes(x = beta)) +
+  geom_density(fill = "red", alpha = 0.5) + ggtitle("MLE Beta Density")
 
+library(patchwork)
+(p1 | p2) / (p3 | p4)
 
+metrics <- function(estimate, value) {
+  bias <- mean(estimate) - value
+  precision <- 1 / var(estimate)
+  mse <- var(estimate) + bias^2
+  return(tibble(Bias = bias, Precision = precision, MSE = mse))
+}
 
+mom_metrics_alpha <- metrics(mom.est$alpha, alpha)
+mle_metrics_alpha <- metrics(mle.est$alpha, alpha)
+mom_metrics_beta <- metrics(mom.est$beta, beta)
+mle_metrics_beta <- metrics(mle.est$beta, beta)
 
+metrics.est <- tibble(
+  Parameter = rep(c("Alpha", "Beta"), each = 2),
+  Method = rep(c("MOM", "MLE"), 2),
+  Bias = c(mom_metrics_alpha$Bias, mle_metrics_alpha$Bias, mom_metrics_beta$Bias, mle_metrics_beta$Bias),
+  Precision = c(mom_metrics_alpha$Precision, mle_metrics_alpha$Precision, mom_metrics_beta$Precision, mle_metrics_beta$Precision),
+  MSE = c(mom_metrics_alpha$MSE, mle_metrics_alpha$MSE, mom_metrics_beta$MSE, mle_metrics_beta$MSE))
+
+print(metrics.est)
