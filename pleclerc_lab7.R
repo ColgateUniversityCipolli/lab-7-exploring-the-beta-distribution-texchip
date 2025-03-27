@@ -18,19 +18,15 @@ beta.stats <- function(alpha, beta){
 
 beta.plots <- function(alpha, beta){
   tib <- beta.stats(alpha, beta)
-  q1.fig.dat <- tibble(x = seq(-0.25, 1.25, length.out=1000))|>   # generate a grid of points
-    mutate(beta.pdf = dbeta(x, alpha, beta),                      # compute the beta PDF
-           norm.pdf = dnorm(x, mean = tib$mean, sd = sqrt(tib$variance)))                         # Gaussian distribution
+  q1.fig.dat <- tibble(x = seq(-0.25, 1.25, length.out=1000))|>  
+    mutate(beta.pdf = dbeta(x, alpha, beta))
   
-  cplot <- ggplot(data= q1.fig.dat)+                                              # specify data
-    geom_line(aes(x=x, y=beta.pdf, color="Beta")) +                 # plot beta dist
-    geom_line(aes(x=x, y=norm.pdf, color="Gaussian(0.2857, 0.0255)")) +  # plot gaussian dist
-    geom_hline(yintercept=0) + # plot x axis
-    theme_bw()+                                                          # change theme
-    xlab("x")+                                                           # label x axis
-    ylab("Density")+                                                     # label y axis
-    scale_color_manual("", values = c("black", "grey"))+                 # change colors
-    theme(legend.position = "bottom")+ # move legend to bottom
+  cplot <- ggplot(data= q1.fig.dat)+                
+    geom_line(aes(x=x, y=beta.pdf)) +  
+    geom_hline(yintercept=0) + 
+    theme_bw()+  
+    xlab("x")+   
+    ylab("Density")+  
     ggtitle(paste0("Beta(", alpha, ", ", beta, ")"))
 
   return(cplot)
@@ -48,7 +44,9 @@ for(i in 1:length(alpha)){
 }
 #view(beta.table)
 full.plot <- wrap_plots(plots, ncol = 2)  
+ggsave("task1.png", width = 10, height = 8)
 print(full.plot)
+
 
 ################################################################
 ##### Task 2 ###################################################
@@ -105,7 +103,7 @@ hist.plots <- function(alpha, beta){
   beta.sample <- bsample(alpha,beta)
   beta.df <- data.frame(x = beta.sample)
   hist <- ggplot(beta.df, aes(x)) +
-    geom_histogram(aes(y = after_stat(density)), bins = 30) +
+    geom_histogram(aes(y = after_stat(density)), bins = 20) +
     geom_density(color = "red") +
     stat_function(fun = dbeta, 
                   args = list(shape1 = alpha, shape2 = beta), 
@@ -130,7 +128,8 @@ histograms <- list()
 for(i in 1:length(alpha)){
   histograms[[i]] <- hist.plots(alpha[i], beta[i]) + xlim(0,1) + ylim(0,3)
 }
-full.hist <- wrap_plots(histograms, ncol = 2)  
+full.hist <- wrap_plots(histograms, ncol = 2)
+ggsave("task3.png", width = 10, height = 8)
 print(full.hist)
 
 ################################################################
@@ -202,6 +201,7 @@ for(i in 2:50){
 
 sumplots <- list(sp1, sp2, sp3, sp4)
 full.plot <- wrap_plots(sumplots, ncol = 2)
+ggsave("task4.png", width = 10, height = 8)
 print(full.plot) 
 
 ################################################################
@@ -251,9 +251,7 @@ p4 <- ggplot(stats, aes(x = kurtosis)) +
 
 library(patchwork)
 (p1 | p2) / (p3 | p4)
-
-
-
+ggsave("task5.png", width = 10, height = 8)
 
 ################################################################
 ##### Task Six #################################################
@@ -323,6 +321,7 @@ ggplot() +
   ylab("Density") +
   geom_line(data = mom.dist, aes(x=x,y=pdf), color="red",size=1) +
   geom_line(data = mle.dist, aes(x=x,y=pdf), color="blue",size=1)
+ggsave("task7.png", width = 10, height = 8)
 
 ################################################################
 ##### Task Eight ###############################################
@@ -373,6 +372,7 @@ p4 <- ggplot(mle.est, aes(x = beta)) +
 
 library(patchwork)
 (p1 | p2) / (p3 | p4)
+ggsave("task8.png", width = 10, height = 8)
 
 metrics <- function(estimate, value) {
   bias <- mean(estimate) - value
