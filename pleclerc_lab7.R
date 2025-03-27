@@ -25,7 +25,7 @@ beta.plots <- function(alpha, beta){
   cplot <- ggplot(data= q1.fig.dat)+                                              # specify data
     geom_line(aes(x=x, y=beta.pdf, color="Beta")) +                 # plot beta dist
     geom_line(aes(x=x, y=norm.pdf, color="Gaussian(0.2857, 0.0255)")) +  # plot gaussian dist
-    geom_hline(yintercept=0)+ # plot x axis
+    geom_hline(yintercept=0) + # plot x axis
     theme_bw()+                                                          # change theme
     xlab("x")+                                                           # label x axis
     ylab("Density")+                                                     # label y axis
@@ -46,7 +46,7 @@ for(i in 1:length(alpha)){
   btable <- beta.stats(alpha[i],beta[i])
   beta.table <- bind_rows(beta.table, btable)
 }
-view(beta.table)
+#view(beta.table)
 full.plot <- wrap_plots(plots, ncol = 2)  
 print(full.plot)
 
@@ -84,7 +84,7 @@ for(i in 1:length(alpha)){
   mtable <- moment.stats(alpha[i],beta[i])
   moment.table <- bind_rows(moment.table, mtable)
 }
-view(moment.table)
+#view(moment.table)
 
 ################################################################
 ##### Task 3 ###################################################
@@ -187,18 +187,18 @@ sp4 <- ggplot(csummary, aes(x = index, y = ckurtosis)) +
     ggtitle("Cumulative Kurtosis")
 
 # I don't think I did this correctly.
-#for(i in 2:50){
-#  set.seed(7272+i)
-#  bstats <- calc.summary(2,5)
-#  sp1 <- sp1 + 
-#    geom_hline(yintercept = bstats$cmean, color=i, linetype="dashed")
-#  sp2 <- sp2 + 
-#    geom_hline(yintercept = bstats$cvariance, color=i, linetype="dashed")
-#  sp3 <- sp3 + 
-#    geom_hline(yintercept = bstats$cskewness, color=i, linetype="dashed")
-#  sp4 <- sp4 + 
-#    geom_hline(yintercept = bstats$ckurtosis, color=i, linetype="dashed")
-#}
+for(i in 2:50){
+  set.seed(7272+i)
+  bstats <- calc.summary(2,5)
+  sp1 <- sp1 + 
+    geom_line(data = bstats, aes(x = index, y = cmean), color=i)
+  sp2 <- sp2 + 
+    geom_line(data = bstats, aes(x = index, y = cvariance), color=i)
+  sp3 <- sp3 + 
+    geom_line(data = bstats, aes(x = index, y = cskewness), color=i)
+  sp4 <- sp4 + 
+    geom_line(data = bstats, aes(x = index, y = ckurtosis), color=i)
+}
 
 sumplots <- list(sp1, sp2, sp3, sp4)
 full.plot <- wrap_plots(sumplots, ncol = 2)
@@ -231,19 +231,23 @@ for(i in 1:1000){
 
 p1 <- ggplot(stats, aes(x = mean)) +
   geom_histogram(aes(y = after_stat(density)), bins = 30, fill = "blue", alpha = 0.5) +
-  geom_density(color = "black") + ggtitle("Sampling Distribution of Mean")
+  geom_density(color = "black") + ggtitle("Sampling Distribution of Mean") +
+  geom_hline(yintercept = 0)
 
 p2 <- ggplot(stats, aes(x = variance)) +
   geom_histogram(aes(y = after_stat(density)), bins = 30, fill = "blue", alpha = 0.5) +
-  geom_density(color = "black") + ggtitle("Sampling Distribution of Variance")
+  geom_density(color = "black") + ggtitle("Sampling Distribution of Variance") +
+  geom_hline(yintercept = 0)
 
 p3 <- ggplot(stats, aes(x = skewness)) +
   geom_histogram(aes(y = after_stat(density)), bins = 30, fill = "blue", alpha = 0.5) +
-  geom_density(color = "black") + ggtitle("Sampling Distribution of Skewness")
+  geom_density(color = "black") + ggtitle("Sampling Distribution of Skewness") +
+  geom_hline(yintercept = 0)
 
 p4 <- ggplot(stats, aes(x = kurtosis)) +
   geom_histogram(aes(y = after_stat(density)), bins = 30, fill = "blue", alpha = 0.5) +
-  geom_density(color = "black") + ggtitle("Sampling Distribution of Kurtosis")
+  geom_density(color = "black") + ggtitle("Sampling Distribution of Kurtosis") +
+  geom_hline(yintercept = 0)
 
 library(patchwork)
 (p1 | p2) / (p3 | p4)
@@ -312,6 +316,7 @@ ggplot() +
                  aes(x=`2022`,
                      y=after_stat(density)),
                  breaks=seq(0,0.024,0.002)) +
+  ggtitle("Histogram of Death Rates") +
   geom_hline(yintercept=0) +
   theme_bw() +
   xlab("Death Rates") +
@@ -336,23 +341,35 @@ for(i in 1:1000){
   moms <- nleqslv(x = c(1,1),
                   fn = MOM.exp,
                   data=sample)
-  mom.est <- bind_rows(mom.est, tibble(alpha = moms$x[1], beta = moms$x[2]))
+  mom.est <- bind_rows(mom.est, 
+                       tibble(alpha = moms$x[1], 
+                              beta = moms$x[2]))
   
   mles <- optim(par = c(1,1), 
                 fn = llbeta,
                 data=sample,
                 neg=T)
-  mle.est <- bind_rows(mle.est, tibble(alpha = mles$par[1], beta = mles$par[2]))
+  mle.est <- bind_rows(mle.est, 
+                       tibble(alpha = mles$par[1], 
+                              beta = mles$par[2]))
 }
 
 p1 <- ggplot(mom.est, aes(x = alpha)) +
-  geom_density(fill = "blue", alpha = 0.5) + ggtitle("MOM Alpha Density")
+  geom_density(fill = "blue", alpha = 0.5) + 
+  ggtitle("MOM Alpha Density") +
+  geom_hline(yintercept = 0)
 p2 <- ggplot(mom.est, aes(x = beta)) +
-  geom_density(fill = "blue", alpha = 0.5) + ggtitle("MOM Beta Density")
+  geom_density(fill = "blue", alpha = 0.5) + 
+  ggtitle("MOM Beta Density") +
+  geom_hline(yintercept = 0)
 p3 <- ggplot(mle.est, aes(x = alpha)) +
-  geom_density(fill = "red", alpha = 0.5) + ggtitle("MLE Alpha Density")
+  geom_density(fill = "red", alpha = 0.5) + 
+  ggtitle("MLE Alpha Density") +
+  geom_hline(yintercept = 0)
 p4 <- ggplot(mle.est, aes(x = beta)) +
-  geom_density(fill = "red", alpha = 0.5) + ggtitle("MLE Beta Density")
+  geom_density(fill = "red", alpha = 0.5) + 
+  ggtitle("MLE Beta Density") +
+  geom_hline(yintercept = 0)
 
 library(patchwork)
 (p1 | p2) / (p3 | p4)
@@ -361,7 +378,9 @@ metrics <- function(estimate, value) {
   bias <- mean(estimate) - value
   precision <- 1 / var(estimate)
   mse <- var(estimate) + bias^2
-  return(tibble(Bias = bias, Precision = precision, MSE = mse))
+  return(tibble(Bias = bias, 
+                Precision = precision, 
+                MSE = mse))
 }
 
 mom_metrics_alpha <- metrics(mom.est$alpha, alpha)
@@ -372,8 +391,17 @@ mle_metrics_beta <- metrics(mle.est$beta, beta)
 metrics.est <- tibble(
   Parameter = rep(c("Alpha", "Beta"), each = 2),
   Method = rep(c("MOM", "MLE"), 2),
-  Bias = c(mom_metrics_alpha$Bias, mle_metrics_alpha$Bias, mom_metrics_beta$Bias, mle_metrics_beta$Bias),
-  Precision = c(mom_metrics_alpha$Precision, mle_metrics_alpha$Precision, mom_metrics_beta$Precision, mle_metrics_beta$Precision),
-  MSE = c(mom_metrics_alpha$MSE, mle_metrics_alpha$MSE, mom_metrics_beta$MSE, mle_metrics_beta$MSE))
+  Bias = c(mom_metrics_alpha$Bias, 
+           mle_metrics_alpha$Bias, 
+           mom_metrics_beta$Bias, 
+           mle_metrics_beta$Bias),
+  Precision = c(mom_metrics_alpha$Precision, 
+                mle_metrics_alpha$Precision, 
+                mom_metrics_beta$Precision, 
+                mle_metrics_beta$Precision),
+  MSE = c(mom_metrics_alpha$MSE, 
+          mle_metrics_alpha$MSE, 
+          mom_metrics_beta$MSE, 
+          mle_metrics_beta$MSE))
 
 print(metrics.est)
