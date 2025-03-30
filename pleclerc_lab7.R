@@ -42,8 +42,12 @@ for(i in 1:length(alpha)){
   btable <- beta.stats(alpha[i],beta[i])
   beta.table <- bind_rows(beta.table, btable)
 }
+
+library(xtable)
+print(xtable(beta.table), type="latex")
+
 #view(beta.table)
-full.plot <- wrap_plots(plots, ncol = 2)  
+full.plot <- wrap_plots(plots, ncol = 2)
 ggsave("task1.png", width = 5, height = 4)
 print(full.plot)
 
@@ -113,7 +117,7 @@ hist.plots <- function(alpha, beta){
     ylab("Density") +
     geom_hline(yintercept = 0)+
     ggtitle(paste0("Histogram: Beta(", alpha, ", ", beta, ")"))
-
+  
   summary <- beta.df |>
     summarize(
       mean = mean(beta.sample),
@@ -160,7 +164,7 @@ csummary <- calc.summary(2,5)
 sp1 <- ggplot(csummary, aes(x = index, y = cmean)) +
     geom_line(color = "blue") +
     geom_hline(yintercept = beta.stats(2,5)$mean, 
-               color="red", linetype="dashed") +
+               color="red") +
     theme_bw() +
     xlab("Sample Size") +
     ylab("Cumulative Mean") +
@@ -169,7 +173,7 @@ sp1 <- ggplot(csummary, aes(x = index, y = cmean)) +
 sp2 <- ggplot(csummary, aes(x=index, y=cvariance)) +
     geom_line(color = "blue") +
     geom_hline(yintercept = beta.stats(2,5)$variance, 
-               color="red", linetype="dashed") +
+               color="red") +
     theme_bw() +
     xlab("Sample Size") +
     ylab("Cumulative Variance") +
@@ -178,7 +182,7 @@ sp2 <- ggplot(csummary, aes(x=index, y=cvariance)) +
 sp3 <- ggplot(csummary, aes(x = index, y = cskewness)) +
     geom_line(color = "blue") +
     geom_hline(yintercept = beta.stats(2,5)$skewness, 
-               color = "red", linetype="dashed") +
+               color = "red") +
     theme_bw() +
     xlab("Sample Size") +
     ylab("Cumulative Skewness") +
@@ -187,7 +191,7 @@ sp3 <- ggplot(csummary, aes(x = index, y = cskewness)) +
 sp4 <- ggplot(csummary, aes(x = index, y = ckurtosis)) +
     geom_line(color = "blue") +
     geom_hline(yintercept = beta.stats(2,5)$excess.kurtosis+3, 
-               color = "red", linetype = "dashed") +
+               color = "red") +
     theme_bw() +
     xlab("Sample Size") +
     ylab("Cumulative Kurtosis") +
@@ -342,10 +346,10 @@ ggplot() +
   theme_bw() +
   xlab("Death Rates") +
   ylab("Density") +
-  geom_line(data = mom.dist, aes(x=x,y=pdf), 
-            color="red", size=1) +
-  geom_line(data = mle.dist, aes(x=x,y=pdf), 
-            color="blue", size=1)
+  geom_line(data = mom.dist, aes(x=x,y=pdf, color = "MoM"), size=1) +
+  geom_line(data = mle.dist, aes(x=x,y=pdf, color = "MLE"), size=1) +
+  scale_color_manual(values = c("MoM" = "red", "MLE" = "blue")) +
+  theme(legend.position = c(0.8, 0.8))
 ggsave("task7.png", width = 5, height = 4)
 
 ################################################################
@@ -380,14 +384,14 @@ for(i in 1:1000){
 
 p1 <- ggplot(mom.est, aes(x = alpha)) +
   geom_density(fill = "blue", alpha = 0.5) + 
-  ggtitle("MOM Density (Alpha)") +
+  ggtitle("MoM Density (Alpha)") +
   theme_bw() +
   xlab("Alpha") +
   ylab("Density") +
   geom_hline(yintercept = 0)
 p2 <- ggplot(mom.est, aes(x = beta)) +
   geom_density(fill = "blue", alpha = 0.5) + 
-  ggtitle("MOM Density (Beta)") +
+  ggtitle("MoM Density (Beta)") +
   theme_bw() +
   xlab("Beta") +
   ylab("Density") +
@@ -427,7 +431,7 @@ mle_metrics_beta <- metrics(mle.est$beta, beta)
 
 metrics.est <- tibble(
   Parameter = rep(c("Alpha", "Beta"), each = 2),
-  Method = rep(c("MOM", "MLE"), 2),
+  Method = rep(c("MoM", "MLE"), 2),
   Bias = c(mom_metrics_alpha$Bias, 
            mle_metrics_alpha$Bias, 
            mom_metrics_beta$Bias, 

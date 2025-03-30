@@ -104,9 +104,26 @@ Provide a roadmap of the structure of the paper.
 
 \section{Density Functions and Parameters}
 
+\begin{Figure}
 \begin{center}
   \includegraphics[width=0.5\textwidth]{task1.png}
-\end{center} 
+\end{center}
+\captionof{figure}{Hello.}
+\end{Figure}
+
+\begin{Figure}
+\centering
+\begin{tabular}{rrrrrr}
+  \hline
+ Alpha & Beta & Mean & Variance & Skewness & Excess Kurtosis \\ 
+  \hline
+2.00 & 5.00 & 0.29 & 0.03 & 0.60 & -0.12 \\ 
+5.00 & 5.00 & 0.50 & 0.02 & 0.00 & -0.46 \\ 
+5.00 & 2.00 & 0.71 & 0.03 & -0.60 & -0.12 \\ 
+0.50 & 0.50 & 0.50 & 0.12 & 0.00 & -1.50 \\ 
+   \hline
+\end{tabular}
+\end{Figure}
 
 \begin{center}
   \includegraphics[width=0.5\textwidth]{task3.png}
@@ -123,10 +140,9 @@ Provide a roadmap of the structure of the paper.
 \end{center} 
 
 \section{Example}
-
 \begin{center}
   \includegraphics[width=0.5\textwidth]{task7.png}
-\end{center} 
+\end{center}
 
 \section{Estimators}
 
@@ -134,19 +150,19 @@ Provide a roadmap of the structure of the paper.
   \includegraphics[width=0.5\textwidth]{task8.png}
 \end{center} 
 
-\begin{table}[ht]
+\begin{Figure}
 \centering
-\begin{tabular}{rllrrr}
+\begin{tabular}{llrrr}
   \hline
- & Parameter & Method & Bias & Precision & MSE \\ 
+ Parameter & Method & Bias & Precision & MSE \\ 
   \hline
-1 & Alpha & MOM & 0.08 & 1.83 & 0.55 \\ 
-  2 & Alpha & MLE & 0.07 & 2.13 & 0.48 \\ 
-  3 & Beta & MOM & 10.29 & 0.00 & 8288.46 \\ 
-  4 & Beta & MLE & 9.11 & 0.00 & 7132.70 \\ 
+  Alpha & MOM & 0.08 & 1.83 & 0.55 \\ 
+  Alpha & MLE & 0.07 & 2.13 & 0.48 \\ 
+  Beta & MOM & 10.29 & 0.00 & 8288.46 \\ 
+  Beta & MLE & 9.11 & 0.00 & 7132.70 \\ 
    \hline
 \end{tabular}
-\end{table}
+\end{Figure}
 
 \section{Discussion}
  You should objectively evaluate the evidence you found in the data. Do not embellish or wish-terpet (my made-up phase for making an interpretation you, or the researcher, wants to be true without the data \emph{actually} supporting it). Connect your findings to the existing information you provided in the Introduction.
@@ -164,6 +180,7 @@ you cite them in your document, the bibliography section will automatically popu
 \begin{tiny}
 \bibliography{bib}
 \end{tiny}
+
 \end{multicols}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
