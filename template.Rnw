@@ -24,7 +24,7 @@
 \begin{document}
 
 \vspace{-1in}
-\title{Lab 8 -- MATH 240 -- Computational Statistics}
+\title{Labs 7 and 8 -- MATH 240 -- Computational Statistics}
 
 \author{
   Pierce Leclerc \\
@@ -39,17 +39,13 @@
 
 \begin{multicols}{2}
 \begin{abstract}
-This document provides a basic template for the 2-page labs we will complete each week. Here, briefly summarize what you did and why it might be helpful. Provide all the top-line conclusions, but avoid providing \emph{all} the details. Results should be limited to ``we show X, Y, and Z."
+In labs 7 and 8, we explored the beta distribution and its properties. We compared summary values of beta distributions under different parameter sets, also analyzing cumulative statistics. We then took death rate data and utilized both the method of moments and maximum likelihood estimates to determine approximate values of the parameters that would provide a matching distribution.
 \end{abstract}
 
-\noindent \textbf{Keywords:} What topics does the lab cover concerning class? List 3-4 key terms here, separated by semicolons.
+\noindent \textbf{Keywords:} Beta Distributions, Random Sampling, Estimators 
 
 \section{Introduction}
-Provide an overarching summary of what you're talking about. In this section, you introduce the idea to the reader, and your goal is to pull them in. What's the mystery you aim to solve?
-
-You want to provide enough background to understand the context of the work. Specifically, what is the question you are addressing? If it applies, describe what information currently exists about this problem, including citations, and explain how the question you're answering complements this work.
-
-Provide a roadmap of the structure of the paper. 
+The beta distribution is a continuous probability distribution with two free parameters, $\alpha$ and $\beta$. It models a random variable $X$ with a support of $[0,1]$. The parameters can be adjusted to allow for flexibility in the distribution. For example, under specific values of $\alpha$ and $\beta$, a beta distribution can be skewed in different directions, have different excess kurtosis values, and other properties.
 
 \section{Density Functions and Parameters}
 
@@ -57,11 +53,12 @@ Provide a roadmap of the structure of the paper.
 \begin{center}
   \includegraphics[width=0.5\textwidth]{task1.png}
 \end{center}
-\captionof{figure}{Hello.}
+\captionof{figure}{Beta distributions with different values of $\alpha$ and $\beta$.}
 \end{Figure}
 
 \begin{Figure}
 \centering
+\scriptsize
 \begin{tabular}{rrrrrr}
   \hline
  Alpha & Beta & Mean & Variance & Skewness & Excess Kurtosis \\ 
@@ -72,32 +69,47 @@ Provide a roadmap of the structure of the paper.
 0.50 & 0.50 & 0.50 & 0.12 & 0.00 & -1.50 \\ 
    \hline
 \end{tabular}
+\captionof{table}{Summary values of beta distributions from different choices of $\alpha$ and $\beta$.}
 \end{Figure}
 
+\begin{Figure}
 \begin{center}
   \includegraphics[width=0.5\textwidth]{task3.png}
 \end{center} 
+\captionof{figure}{Histograms of random samples from different beta distributions.}
+\end{Figure}
 
 \section{Properties}
 
+\begin{Figure}
 \begin{center}
   \includegraphics[width=0.5\textwidth]{task4.png}
 \end{center} 
+\captionof{figure}{Cumulative statistics compared with sample size.}
+\end{Figure}
 
+\begin{Figure}
 \begin{center}
   \includegraphics[width=0.5\textwidth]{task5.png}
 \end{center} 
+\captionof{figure}{Distributions of summary values under random sampling of the Beta(2,5) distribution. All four appear to be normally distributed.}
+\end{Figure}
 
-\section{Example}
+\begin{Figure}
 \begin{center}
   \includegraphics[width=0.5\textwidth]{task7.png}
-\end{center}
+\end{center} 
+\captionof{figure}{Histogram of 2022 death rates from the world bank, with MLE and MoM estimated distributions superimposed The MoM distribution appears to match slightly better.}
+\end{Figure}
 
 \section{Estimators}
 
+\begin{Figure}
 \begin{center}
   \includegraphics[width=0.5\textwidth]{task8.png}
 \end{center} 
+\captionof{figure}{Estimated densities of alpha and beta for the method of moments and maximum likelihood estimates.}
+\end{Figure}
 
 \begin{Figure}
 \centering
@@ -111,34 +123,18 @@ Provide a roadmap of the structure of the paper.
   Beta & MLE & 9.11 & 0.00 & 7132.70 \\ 
    \hline
 \end{tabular}
+\captionof{table}{Bias, precision, and mean squared error for the method of moments and maximum likelihood estimates, with $\alpha = 8$ and $\beta = 950$.}
 \end{Figure}
-
-\section{Discussion}
- You should objectively evaluate the evidence you found in the data. Do not embellish or wish-terpet (my made-up phase for making an interpretation you, or the researcher, wants to be true without the data \emph{actually} supporting it). Connect your findings to the existing information you provided in the Introduction.
-
-Finally, provide some concluding remarks that tie together the entire paper. Think of the last part of the results as abstract-like. Tell the reader what they just consumed -- what's the takeaway message?
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Bibliography
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \vspace{2em}
 
-\noindent\textbf{Bibliography:} Note that when you add citations to your bib.bib file \emph{and}
-you cite them in your document, the bibliography section will automatically populate here.
-
 \begin{tiny}
 \bibliography{bib}
 \end{tiny}
 
 \end{multicols}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Appendix
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\newpage
-\onecolumn
-\section{Appendix}
-
-If you have anything extra, you can add it here in the appendix. This can include images or tables that don't work well in the two-page setup, code snippets you might want to share, etc.
 
 \end{document}
