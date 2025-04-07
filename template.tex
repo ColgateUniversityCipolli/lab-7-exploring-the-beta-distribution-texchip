@@ -100,12 +100,16 @@ The beta distribution is a continuous probability distribution with two free par
 
 \section{Density Functions and Parameters}
 
+Adjusting the parameters of beta distributions, $\alpha$ and $\beta$, can drastically alter their visual properties. Figure 1 provides four examples of different beta distributions.
+
 \begin{Figure}
 \begin{center}
   \includegraphics[width=0.5\textwidth]{task1.png}
 \end{center}
 \captionof{figure}{Beta distributions with different values of $\alpha$ and $\beta$.}
 \end{Figure}
+
+From these same four distributions, we can analyze their properties numerically through summaries. Table 1 highlights the mean, variance, skewness, and excess kurtosis of their respective distributions.
 
 \begin{Figure}
 \centering
@@ -123,6 +127,8 @@ The beta distribution is a continuous probability distribution with two free par
 \captionof{table}{Summary values of beta distributions from different choices of $\alpha$ and $\beta$.}
 \end{Figure}
 
+From generating samples of each distribution, we can observe how randomly generated data can approximate specific beta distributions in real-world scenarios. Figure 2 illustrates random sampling of the previous beta distributions with both estimated densities and true population densities superimposed.
+
 \begin{Figure}
 \begin{center}
   \includegraphics[width=0.5\textwidth]{task3.png}
@@ -132,12 +138,16 @@ The beta distribution is a continuous probability distribution with two free par
 
 \section{Properties}
 
+From calculating cumulative statistics, we can attempt to observe convergence to true population quantities as the sample size increases through gradual decreases in variability. Figure 3 demonstrates this convergence through cumulative statistics of sampled data from the Beta(2,5) distribution. As sample size increases, for all four measures, the cumulative statistics visually converge to the values that describe the true population distribution (red horizontal lines).
+
 \begin{Figure}
 \begin{center}
   \includegraphics[width=0.5\textwidth]{task4.png}
 \end{center} 
-\captionof{figure}{Cumulative statistics compared with sample size.}
+\captionof{figure}{Cumulative statistics from sampled data of the Beta(2,5) distribution compared with sample size.}
 \end{Figure}
+
+By storing statistics of interest from samples of the Beta(2,5) distribution, we can also observe their likely true values. Figure 4 displays the results, with each statistic appearing normally distributed after 1000 samples were taken.
 
 \begin{Figure}
 \begin{center}
@@ -146,14 +156,18 @@ The beta distribution is a continuous probability distribution with two free par
 \captionof{figure}{Distributions of summary values under random sampling of the Beta(2,5) distribution. All four appear to be normally distributed.}
 \end{Figure}
 
+\section{Estimators}
+
+2022 death rate data was collected from the World Bank and analyzed through point estimates in an attempt to determine a beta distribution which the data closely approximates as suggested by \cite{fatih}. Method of moments and maximum likelihood estimators were obtained, and their distributions were superimposed with the death rate data in Figure 5.
+
 \begin{Figure}
 \begin{center}
   \includegraphics[width=0.5\textwidth]{task7.png}
 \end{center} 
-\captionof{figure}{Histogram of 2022 death rates from the world bank, with MLE and MoM estimated distributions superimposed The MoM distribution appears to match slightly better.}
+\captionof{figure}{Histogram of 2022 death rates from the world bank, with MLE and MoM estimated distributions superimposed.}
 \end{Figure}
 
-\section{Estimators}
+From 1000 samples, method of moments and maximum likelihood estimators were calculated, and Figure 6 visualizes the densities of each method's respective estimators in an attempt to determine which method provided the best estimates. 
 
 \begin{Figure}
 \begin{center}
@@ -162,20 +176,24 @@ The beta distribution is a continuous probability distribution with two free par
 \captionof{figure}{Estimated densities of alpha and beta for the method of moments and maximum likelihood estimates.}
 \end{Figure}
 
+To aid these visualizations, Table 2 provides a numerical summary, highlighting bias, precision, and mean squared error (MSE) for the estimators.
+
 \begin{Figure}
 \centering
 \begin{tabular}{llrrr}
   \hline
  Parameter & Method & Bias & Precision & MSE \\ 
   \hline
-  Alpha & MOM & 0.08 & 1.83 & 0.55 \\ 
+  Alpha & MoM & 0.08 & 1.83 & 0.55 \\ 
   Alpha & MLE & 0.07 & 2.13 & 0.48 \\ 
-  Beta & MOM & 10.29 & 0.00 & 8288.46 \\ 
+  Beta & MoM & 10.29 & 0.00 & 8288.46 \\ 
   Beta & MLE & 9.11 & 0.00 & 7132.70 \\ 
    \hline
 \end{tabular}
 \captionof{table}{Bias, precision, and mean squared error for the method of moments and maximum likelihood estimates, with $\alpha = 8$ and $\beta = 950$.}
 \end{Figure}
+
+From Figure 6 and Table 2, it is evident that the MLE estimators more closely approximate the data, as both bias and MSE are lower for each estimator than their method of moments counterparts.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Bibliography
